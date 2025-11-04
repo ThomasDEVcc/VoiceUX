@@ -9,7 +9,7 @@ An embeddable voice-controlled AI chat widget that can be added to any website. 
 - **🎤 Voice Input** - Use Web Speech API for natural voice commands
 - **🔊 Voice Output** - AI responses are read aloud using text-to-speech
 - **💬 Chat Interface** - Beautiful, responsive chat UI
-- **🤖 AI Powered** - Intelligent conversations using OpenAI GPT
+- **🤖 AI Powered** - Intelligent conversations using OpenAI GPT or Anthropic Claude
 - **🎨 Customizable** - Easy to style and configure
 - **🚀 Easy Integration** - Just add one script tag to your website
 - **📱 Responsive** - Works on desktop and mobile browsers
@@ -28,8 +28,14 @@ npm install
 # Create environment file
 cp .env.example .env
 
-# Edit .env and add your OpenAI API key
-# OPENAI_API_KEY=your_key_here
+# Edit .env and configure your AI provider
+# For Anthropic (recommended):
+#   AI_PROVIDER=anthropic
+#   ANTHROPIC_API_KEY=your_anthropic_key_here
+#
+# For OpenAI:
+#   AI_PROVIDER=openai
+#   OPENAI_API_KEY=your_openai_key_here
 
 # Start the server
 npm start
@@ -78,6 +84,24 @@ This creates `widget/dist/voiceUX.js`
 # Make sure backend is running first!
 open examples/demo.html
 ```
+
+## AI Provider Options
+
+VoiceUX supports both **Anthropic Claude** and **OpenAI GPT** models:
+
+### Anthropic Claude (Recommended)
+- **Models:** Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku
+- **Best for:** Conversational quality, following instructions, natural responses
+- **Setup:** Get API key from [console.anthropic.com](https://console.anthropic.com/)
+- **Config:** Set `AI_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` in `.env`
+
+### OpenAI GPT
+- **Models:** GPT-3.5 Turbo, GPT-4, GPT-4 Turbo
+- **Best for:** General-purpose tasks, wide adoption
+- **Setup:** Get API key from [platform.openai.com](https://platform.openai.com/)
+- **Config:** Set `AI_PROVIDER=openai` and `OPENAI_API_KEY` in `.env`
+
+You can switch between providers by simply changing the `AI_PROVIDER` variable in your `.env` file and restarting the server.
 
 ## Configuration Options
 
@@ -172,10 +196,20 @@ npm run dev    # Auto-restart with nodemon
 ### Backend (.env)
 
 ```bash
-# Required
-OPENAI_API_KEY=your_openai_api_key
+# AI Provider (choose one)
+AI_PROVIDER=anthropic  # or 'openai'
 
-# Optional
+# Anthropic Configuration (if using Claude)
+ANTHROPIC_API_KEY=your_anthropic_api_key
+ANTHROPIC_MODEL=claude-3-5-sonnet-20241022
+# Other models: claude-3-opus-20240229, claude-3-haiku-20240307
+
+# OpenAI Configuration (if using GPT)
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-3.5-turbo
+# Other models: gpt-4, gpt-4-turbo-preview
+
+# Server Configuration (optional)
 PORT=3000
 NODE_ENV=development
 ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080
@@ -188,6 +222,7 @@ ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080
 - [x] Voice input/output
 - [x] Basic AI conversation
 - [x] Backend API
+- [x] Support for both OpenAI and Anthropic AI providers
 
 ### Phase 2: Page Reading (Coming Soon)
 - [ ] DOM analysis and summarization
@@ -219,10 +254,12 @@ MIT License - see LICENSE file for details
 - Check CORS settings in backend/server.js
 - Ensure API URL in widget config matches backend
 
-### OpenAI API errors
+### AI API errors
 - Verify your API key is correct in .env
-- Check you have credits in your OpenAI account
-- Review API usage limits
+- Check that AI_PROVIDER matches your chosen provider
+- For OpenAI: Ensure you have credits in your account
+- For Anthropic: Verify your API key has the correct permissions
+- Review API usage limits and rate limits
 
 ## Support
 

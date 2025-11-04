@@ -44,15 +44,32 @@ app.use(cors({
 
 // Initialize AI service
 try {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    console.warn('WARNING: OPENAI_API_KEY not set in environment variables');
-    console.warn('Please create a .env file with your OpenAI API key');
+  const provider = process.env.AI_PROVIDER || 'openai';
+  let apiKey, model;
+
+  if (provider.toLowerCase() === 'anthropic') {
+    apiKey = process.env.ANTHROPIC_API_KEY;
+    model = process.env.ANTHROPIC_MODEL;
+
+    if (!apiKey) {
+      console.warn('⚠️  WARNING: ANTHROPIC_API_KEY not set in environment variables');
+      console.warn('Please add ANTHROPIC_API_KEY to your .env file');
+    } else {
+      aiService.initialize({ provider: 'anthropic', apiKey, model });
+    }
   } else {
-    aiService.initialize(apiKey);
+    apiKey = process.env.OPENAI_API_KEY;
+    model = process.env.OPENAI_MODEL;
+
+    if (!apiKey) {
+      console.warn('⚠️  WARNING: OPENAI_API_KEY not set in environment variables');
+      console.warn('Please add OPENAI_API_KEY to your .env file');
+    } else {
+      aiService.initialize({ provider: 'openai', apiKey, model });
+    }
   }
 } catch (error) {
-  console.error('Failed to initialize AI service:', error);
+  console.error('❌ Failed to initialize AI service:', error);
 }
 
 // Routes
@@ -86,8 +103,13 @@ app.listen(PORT, () => {
   console.log(`📡 API endpoint: http://localhost:${PORT}/api`);
   console.log(`🏥 Health check: http://localhost:${PORT}/api/health\n`);
 
-  if (!process.env.OPENAI_API_KEY) {
-    console.log('⚠️  To use AI features, set OPENAI_API_KEY in .env file\n');
+  const provider = process.env.AI_PROVIDER || 'openai';
+  const hasKey = provider === 'anthropic'
+    ? process.env.ANTHROPIC_API_KEY
+    : process.env.OPENAI_API_KEY;
+
+  if (!hasKey) {
+    console.log(`⚠️  To use AI features, set ${provider.toUpperCase()}_API_KEY in .env file\n`);
   }
 });
 
