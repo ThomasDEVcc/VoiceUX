@@ -1,0 +1,34 @@
+/**
+ * ChatBubble - Floating chat button
+ */
+export class ChatBubble {
+  constructor(onClick) {
+    this.onClick = onClick;
+    this.element = this.create();
+  }
+
+  create() {
+    const bubble = document.createElement('div');
+    bubble.className = 'voiceUX-bubble';
+    bubble.innerHTML = `
+      <svg class="voiceUX-bubble-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+      </svg>
+    `;
+    bubble.addEventListener('click', this.onClick);
+    return bubble;
+  }
+
+  setListening(isListening) {
+    if (isListening) {
+      this.element.classList.add('listening');
+    } else {
+      this.element.classList.remove('listening');
+    }
+  }
+
+  mount(container) {
+    container.appendChild(this.element);
+  }
+}
